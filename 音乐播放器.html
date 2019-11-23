@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script type="text/javascript" src="js/jquery-3.4.0.js"></script>
+	</head>
+	<body>
+		<style type="text/css">
+			* {margin: 0; padding: 0;}
+			.clear:after{
+				display: block;
+				content: "";
+				clear: both;
+			}
+			.musicplayer {
+				width: 380px;
+				height: 100px;
+				background: gray;
+			}
+			.musicplayer > div {
+				float: left;
+			}
+			#icon {
+				width: 80px;
+				height: 80px;
+				margin-top: 10px;
+				margin-left: 5px;
+			}
+			#icon img {
+				width: 80px;
+				height: 80px;
+				border-radius: 50%;
+				-webkit-animation-name: change;
+				-webkit-animation-duration: 3s;
+				-webkit-animation-iteration-count: infinite;
+				-webkit-animation-timing-function: linear;
+				-webkit-animation-play-state: paused;
+			}
+			#center {
+				margin-top: 37px;
+				margin-left: 20px;
+			}
+			#center .btn {
+				float: left;
+				margin-right: 10px;
+			}
+			.btn-prev {
+				width: 16px;
+				height: 20px;
+				background: url(img/ico_btn_player.png) no-repeat -90px 0px;
+				position: relative;
+				top: 3px;
+			}
+			.btn-pause {
+				width: 22px;
+				height: 26px;
+				background: url(img/ico_btn_player.png) no-repeat -90px -90px;
+			}
+			.btn-play {
+				width: 22px;
+				height: 26px;
+				background: url(img/ico_btn_player.png) no-repeat -90px -60px;
+			}
+			.btn-next {
+				width: 16px;
+				height: 20px;
+				background: url(img/ico_btn_player.png) no-repeat -90px -30px;
+				position: relative;
+				top: 3px;
+			}
+			#right {
+				margin-left: 20px;
+				margin-top: 39px;
+			}
+			#right p {
+				text-align: right;
+			}
+			@-webkit-keyframes change{
+				from{transform: rotate(0deg);}
+				to{transform: rotate(359deg);}
+			}
+		</style>
+		
+		<div class="musicplayer">
+			<div id="icon"><img src="img/kuaizixiongdi.jpeg"/></div>
+			<div id="center">
+				<div class="btn btn-prev"></div>
+				<div class="btn btn-play btn-pause" id="play"></div>
+				<div class="btn btn-next"></div>
+			</div>
+			<div id="right">
+				<input type="range" value="0" min="0" max="100" id="musicrange" loop="loop"/>
+				<p class="time">00:00/00:00</p>
+			</div>
+			<audio src="media/小苹果.mp3" id="music"></audio>
+		</div>
+		
+		<script type="text/javascript">
+			$(document).ready(function() {
+				var mp3 = $("#music")[0];
+				var playBtn = $("#play")[0];
+				var img = $("#icon img")[0];
+				var time = $("#right p");
+				var mrange = $("#musicrange")[0];
+				var r = 0;
+				var m = 0;
+				var s = 0;
+				$("body").on("click", playBtn, function() {
+					if(mp3.paused) {
+						mp3.play();
+						$(playBtn).removeClass("btn-play");
+						$(playBtn).addClass("btn-pause");
+						$(img).css("-webkit-animation-play-state", "running");
+						var t = setInterval(function() {
+							r += 100/mp3.duration;
+							$(mrange).val(r);
+//							console.log(r);
+//							console.log($(mrange).val());
+							s += 1;
+							if(s > 59) {
+								m += 1;
+								s = 0;
+							}
+							time.html(m + ":" + s + "/" + Math.floor(mp3.duration/60) + ":" + (mp3.duration%60).toFixed(0));
+							if(mp3.paused) {
+								clearInterval(t);
+							}
+						}, 1000)
+					} else {
+						mp3.pause();
+						$(playBtn).addClass("btn-play");
+						$(playBtn).removeClass("btn-pause");
+						$(img).css("-webkit-animation-play-state", "paused");
+
+					}
+				})
+				
+				
+				
+				
+			})
+			
+		</script>
+	</body>
+</html>
